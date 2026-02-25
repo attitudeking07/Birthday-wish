@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: radial-gradient(circle, #0d1b2a 0%, #000814 100%); /* Deep Dark for Neon Look */
+            font-family: 'Dancing Script', cursive;
+            overflow: hidden;
+        }
+
+        .bg-elements {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .element {
+            position: absolute;
+            color: rgba(0, 191, 255, 0.4);
+            animation: floatBG 8s infinite ease-in-out;
+        }
+
+        @keyframes floatBG {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            padding: 50px 30px;
+            border-radius: 30px;
+            box-shadow: 0 0 30px rgba(0, 183, 255, 0.2);
+            width: 85%;
+            max-width: 380px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 10;
+        }
+
+        h1 { 
+            color: #80d8ff; 
+            font-size: 2.8rem; 
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(128, 216, 255, 0.5);
+        }
+        
+        #wish-text {
+            color: #e0f7fa;
+            font-size: 1.5rem;
+            line-height: 1.4;
+            min-height: 120px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #00b0ff, #0081cb);
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-family: 'Dancing Script', cursive;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 176, 255, 0.4);
+            transition: 0.3s;
+        }
+
+        .btn:active { transform: scale(0.9); }
+
+        /* Neon Floating Blessing */
+        .blessing {
+            color: #fff;
+            font-weight: bold;
+            font-size: 2.2rem;
+            display: none;
+            /* Neon Effect */
+            text-shadow: 
+                0 0 7px #fff,
+                0 0 10px #fff,
+                0 0 21px #fff,
+                0 0 42px #00b0ff,
+                0 0 82px #00b0ff,
+                0 0 92px #00b0ff;
+            animation: neonFloat 2.5s infinite ease-in-out;
+        }
+
+        @keyframes neonFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .fade-in { animation: fadeIn 0.8s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; filter: blur(5px); }
+            to { opacity: 1; filter: blur(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-elements" id="bg"></div>
+
+    <div class="card fade-in">
+        <h1 id="title">Happy Birthday! 🎂</h1>
+        <div id="wish-text">Tap the button to unlock the magic...</div>
+        
+        <div id="final-blessing" class="blessing">Mahadev Bless You</div>
+        
+        <button id="next-btn" class="btn" onclick="celebrate()">Open Wishes</button>
+    </div>
+
+    <script>
+        const bg = document.getElementById('bg');
+        const symbols = ['✨', '⭐', '💙', '❄️'];
+        for (let i = 0; i < 20; i++) {
+            let el = document.createElement('div');
+            el.className = 'element';
+            el.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.top = Math.random() * 100 + 'vh';
+            el.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            el.style.animationDuration = (Math.random() * 3 + 5) + 's';
+            bg.appendChild(el);
+        }
+
+        const wishes = [
+            "May your day be as sweet as the cake you cut! Happy Birthday! ✨",
+            "I hope this year brings you countless reasons to smile. 🌟",
+            "Wishing you a sky full of stars and a life full of dreams. 🥂",
+            "You deserve the best of everything today and always! 🎁",
+            "Keep spreading your light wherever you go. Stay blessed! 🎈"
+        ];
+
+        let currentIdx = 0;
+
+        function celebrate() {
+            const textElement = document.getElementById('wish-text');
+            const btn = document.getElementById('next-btn');
+            const blessing = document.getElementById('final-blessing');
+            const title = document.getElementById('title');
+
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#00b0ff', '#ffffff', '#ffd700']
+            });
+
+            if (currentIdx < wishes.length) {
+                textElement.innerText = wishes[currentIdx];
+                btn.innerText = "Next Surprise ✨";
+                currentIdx++;
+            } else {
+                title.style.display = 'none';
+                textElement.style.display = 'none';
+                btn.style.display = 'none';
+                blessing.style.display = 'block';
+                
+                // Final Neon Blast
+                var duration = 5 * 1000;
+                var end = Date.now() + duration;
+                (function frame() {
+                    confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#00b0ff', '#ffffff'] });
+                    confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#00b0ff', '#ffffff'] });
+                    if (Date.now() < end) requestAnimationFrame(frame);
+                }());
+            }
+        }
+    </script>
+</body>
+</html>
